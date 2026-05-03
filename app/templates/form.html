@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-wrapper">
+<div class="form-card">
+
+<h2>Submit Your Query</h2>
+<p class="sub-text">Tell us your issue</p>
+
+<form method="POST" action="/submit">
+    <div class="form-group">
+        <label>Name</label>
+        <input name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label>Query</label>
+        <textarea name="query" required></textarea>
+    </div>
+
+    <button class="btn btn-primary full-btn">Submit</button>
+</form>
+
+</div>
+</div>
+
+{% endblock %}
