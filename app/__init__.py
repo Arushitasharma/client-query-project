@@ -1,19 +1,48 @@
 from flask import Flask
-from .database import init_db
+from flask_login import LoginManager
+from dotenv import load_dotenv
+
+import os
+
+from .models import db, User
+
+load_dotenv()
+
+login_manager = LoginManager()
+
 
 def create_app():
+
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_mapping(
-        SECRET_KEY="supersecretkey"  # required for session
+        SECRET_KEY=os.getenv("SECRET_KEY"),
+        SQLALCHEMY_DATABASE_URI="sqlite:///site.db",
+        SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
 
-    init_db(app)
+    # DATABASE
+    db.init_app(app)
 
+    # LOGIN MANAGER
+    login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
+    login_manager.login_message = "Please login first"
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    # CREATE TABLES
+    with app.app_context():
+        db.create_all()
+
+    # IMPORT ROUTES
     from .routes.main import main
     from .routes.admin import admin
     from .routes.auth import auth
 
+    # REGISTER BLUEPRINTS
     app.register_blueprint(main)
     app.register_blueprint(admin)
     app.register_blueprint(auth)
