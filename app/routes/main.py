@@ -1,34 +1,32 @@
-from flask import Blueprint, render_template, request, redirect
-from ..database import get_db
+from flask import Blueprint, render_template, request, redirect, flash
+from app.models import db, Query
 
-main = Blueprint("main", __name__)
+main = Blueprint('main', __name__)
 
 
-# HOME
+# HOME PAGE
 @main.route("/")
 def home():
-    return redirect("/login")
-
-
-# QUERY FORM
-@main.route("/query", methods=["GET", "POST"])
-def query_form():
-
-    if request.method == "POST":
-
-        name = request.form["name"]
-        email = request.form["email"]
-        query = request.form["query"]
-
-        db = get_db()
-
-        db.execute(
-            "INSERT INTO queries (name, email, query, status) VALUES (?, ?, ?, ?)",
-            (name, email, query, "Pending")
-        )
-
-        db.commit()
-
-        return redirect("/query")
-
     return render_template("form.html")
+
+
+# SUBMIT QUERY
+@main.route("/submit", methods=["POST"])
+def submit_query():
+
+    name = request.form.get("name")
+    email = request.form.get("email")
+    query_text = request.form.get("query")
+
+    new_query = Query(
+        name=name,
+        email=email,
+        query=query_text
+    )
+
+    db.session.add(new_query)
+    db.session.commit()
+
+    flash("Query submitted successfully!")
+
+    return redirect("/")

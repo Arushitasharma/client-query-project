@@ -1,47 +1,29 @@
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required
 
-from app.database import get_db
+from app.models import db, Query
 
 admin = Blueprint('admin', __name__)
 
 
-# ADMIN PAGE
+# ADMIN DASHBOARD
 @admin.route("/admin")
 @login_required
 def admin_panel():
 
-    search = request.args.get("search", "")
+    rows = Query.query.order_by(Query.id.desc()).all()
 
-    conn = get_db()
-    cursor = conn.cursor()
+    total_queries = Query.query.count()
 
-    if search:
-
-        cursor.execute(
-            """
-            SELECT * FROM queries
-            WHERE name LIKE ?
-            OR email LIKE ?
-            ORDER BY id DESC
-            """,
-            (f"%{search}%", f"%{search}%")
-        )
-
-    else:
-
-        cursor.execute(
-            "SELECT * FROM queries ORDER BY id DESC"
-        )
-
-    rows = cursor.fetchall()
-
-    conn.close()
+    pending_queries = Query.query.filter_by(
+        status="Pending"
+    ).count()
 
     return render_template(
         "admin.html",
         rows=rows,
-        search=search
+        total_queries=total_queries,
+        pending_queries=pending_queries
     )
 
 
@@ -50,16 +32,11 @@ def admin_panel():
 @login_required
 def delete_query(id):
 
-    conn = get_db()
-    cursor = conn.cursor()
+    query = Query.query.get(id)
 
-    cursor.execute(
-        "DELETE FROM queries WHERE id = ?",
-        (id,)
-    )
-
-    conn.commit()
-    conn.close()
+    if query:
+        db.session.delete(query)
+        db.session.commit()
 
     return redirect(url_for("admin.admin_panel"))
 
@@ -69,27 +46,16 @@ def delete_query(id):
 @login_required
 def toggle_status(id):
 
-    conn = get_db()
-    cursor = conn.cursor()
+    query = Query.query.get(id)
 
-    cursor.execute(
-        "SELECT status FROM queries WHERE id = ?",
-        (id,)
-    )
+    if query:
 
-    current_status = cursor.fetchone()[0]
+        if query.status == "Pending":
+            query.status = "Resolved"
 
-    if current_status == "Pending":
-        new_status = "Resolved"
-    else:
-        new_status = "Pending"
+        else:
+            query.status = "Pending"
 
-    cursor.execute(
-        "UPDATE queries SET status = ? WHERE id = ?",
-        (new_status, id)
-    )
-
-    conn.commit()
-    conn.close()
+        db.session.commit()
 
     return redirect(url_for("admin.admin_panel"))
