@@ -19,7 +19,7 @@ def create_app():
     # APP CONFIG
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY", "fallbacksecret"),
-        SQLALCHEMY_DATABASE_URI="sqlite:///site.db",
+        SQLALCHEMY_DATABASE_URI="sqlite:///newsite.db",
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
 
