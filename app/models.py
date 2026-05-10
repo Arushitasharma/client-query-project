@@ -34,10 +34,10 @@ class Query(db.Model):
         nullable=False
     )
 
-    query = db.Column(
-        db.Text,
-        nullable=False
-    )
+    message = db.Column(
+    db.Text,
+    nullable=False
+)
 
     status = db.Column(
         db.String(50),
