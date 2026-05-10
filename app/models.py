@@ -4,6 +4,7 @@ from flask_login import UserMixin
 db = SQLAlchemy()
 
 
+# USER TABLE
 class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -19,7 +20,13 @@ class User(UserMixin, db.Model):
         nullable=False
     )
 
+    is_admin = db.Column(
+        db.Boolean,
+        default=False
+    )
 
+
+# QUERY TABLE
 class Query(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -35,9 +42,9 @@ class Query(db.Model):
     )
 
     message = db.Column(
-    db.Text,
-    nullable=False
-)
+        db.Text,
+        nullable=False
+    )
 
     status = db.Column(
         db.String(50),

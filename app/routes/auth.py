@@ -1,10 +1,18 @@
 from flask import Blueprint, render_template, request, redirect, flash
-from flask_login import login_user, logout_user, login_required
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import (
+    login_user,
+    logout_user,
+    login_required
+)
 
-from ..models import db, User
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
-auth = Blueprint("auth", __name__)
+from app.models import db, User
+
+auth = Blueprint('auth', __name__)
 
 
 # REGISTER
@@ -13,30 +21,39 @@ def register():
 
     if request.method == "POST":
 
-        username = request.form["username"]
-        password = request.form["password"]
+        username = request.form.get("username")
 
-        # Check if user already exists
-        existing_user = User.query.filter_by(username=username).first()
+        password = request.form.get("password")
+
+        existing_user = User.query.filter_by(
+            username=username
+        ).first()
 
         if existing_user:
+
             flash("Username already exists")
+
             return redirect("/register")
 
-        # Hash password
+        # FIRST ADMIN ACCOUNT
+        is_admin = False
+
+        if username == "admin":
+            is_admin = True
+
         hashed_password = generate_password_hash(password)
 
-        # Create new user
         new_user = User(
             username=username,
-            password=hashed_password
+            password=hashed_password,
+            is_admin=is_admin
         )
 
-        # Save to database
         db.session.add(new_user)
         db.session.commit()
 
-        flash("Registration successful! Please login.")
+        flash("Registration successful")
+
         return redirect("/login")
 
     return render_template("register.html")
@@ -48,21 +65,28 @@ def login():
 
     if request.method == "POST":
 
-        username = request.form["username"]
-        password = request.form["password"]
+        username = request.form.get("username")
 
-        # Find user
-        user = User.query.filter_by(username=username).first()
+        password = request.form.get("password")
 
-        # Check password
-        if user and check_password_hash(user.password, password):
+        user = User.query.filter_by(
+            username=username
+        ).first()
+
+        if user and check_password_hash(
+            user.password,
+            password
+        ):
 
             login_user(user)
 
-            flash("Login successful!")
-            return redirect("/admin")
+            flash("Login successful")
 
-        flash("Invalid username or password")
+            return redirect("/")
+
+        else:
+
+            flash("Invalid username or password")
 
     return render_template("login.html")
 
@@ -75,4 +99,5 @@ def logout():
     logout_user()
 
     flash("Logged out successfully")
+
     return redirect("/login")

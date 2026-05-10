@@ -1,5 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for
-from flask_login import login_required
+from flask import (
+    Blueprint,
+    render_template,
+    redirect,
+    url_for,
+    abort
+)
+
+from flask_login import (
+    login_required,
+    current_user
+)
 
 from app.models import db, Query
 
@@ -11,7 +21,13 @@ admin = Blueprint('admin', __name__)
 @login_required
 def admin_panel():
 
-    rows = Query.query.order_by(Query.id.desc()).all()
+    # ADMIN CHECK
+    if not current_user.is_admin:
+        abort(403)
+
+    rows = Query.query.order_by(
+        Query.id.desc()
+    ).all()
 
     total_queries = Query.query.count()
 
@@ -32,10 +48,15 @@ def admin_panel():
 @login_required
 def delete_query(id):
 
+    if not current_user.is_admin:
+        abort(403)
+
     query = Query.query.get(id)
 
     if query:
+
         db.session.delete(query)
+
         db.session.commit()
 
     return redirect(url_for("admin.admin_panel"))
@@ -45,6 +66,9 @@ def delete_query(id):
 @admin.route("/toggle-status/<int:id>")
 @login_required
 def toggle_status(id):
+
+    if not current_user.is_admin:
+        abort(403)
 
     query = Query.query.get(id)
 
