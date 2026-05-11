@@ -26,7 +26,7 @@ def create_app():
     # DATABASE
     db.init_app(app)
 
-    # LOGIN MANAGER CONFIG
+    # LOGIN MANAGER
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
     login_manager.login_message = "Please login first"
@@ -36,7 +36,7 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    # CREATE DATABASE TABLES
+    # CREATE TABLES
     with app.app_context():
         db.create_all()
 

@@ -1,4 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, flash
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    flash
+)
+
 from flask_login import (
     login_user,
     logout_user,
@@ -35,11 +42,8 @@ def register():
 
             return redirect("/register")
 
-        # FIRST ADMIN ACCOUNT
-        is_admin = False
-
-        if username == "admin":
-            is_admin = True
+        # ADMIN CHECK
+        is_admin = username.lower() == "admin"
 
         hashed_password = generate_password_hash(password)
 
