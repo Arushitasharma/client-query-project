@@ -19,6 +19,8 @@ from werkzeug.security import (
 
 from app.models import db, User
 
+import re
+
 auth = Blueprint('auth', __name__)
 
 
@@ -28,10 +30,49 @@ def register():
 
     if request.method == "POST":
 
-        username = request.form.get("username")
+        username = request.form.get("username").strip().lower()
 
-        password = request.form.get("password")
+        password = request.form.get("password").strip()
 
+        # USERNAME SPACES CHECK
+        if " " in username:
+
+            flash("Username cannot contain spaces")
+
+            return redirect("/register")
+
+        # USERNAME LENGTH CHECK
+        if len(username) < 4 or len(username) > 15:
+
+            flash("Username must be between 4 and 15 characters")
+
+            return redirect("/register")
+
+        # PASSWORD LENGTH CHECK
+        if len(password) < 4 or len(password) > 15:
+
+            flash("Password must be between 4 and 15 characters")
+
+            return redirect("/register")
+
+        # PASSWORD REGEX CHECK
+        password_pattern = (
+            r"^(?=.*[a-z])"
+            r"(?=.*[A-Z])"
+            r"(?=.*\d)"
+            r"(?=.*[@$!%*?&])"
+            r".{4,15}$"
+        )
+
+        if not re.match(password_pattern, password):
+
+            flash(
+                "Password must contain uppercase, lowercase, digit and special character"
+            )
+
+            return redirect("/register")
+
+        # CHECK EXISTING USER
         existing_user = User.query.filter_by(
             username=username
         ).first()
@@ -43,22 +84,33 @@ def register():
             return redirect("/register")
 
         # ADMIN CHECK
-        is_admin = username.lower() == "admin"
+        is_admin = username == "admin"
 
+        # HASH PASSWORD
         hashed_password = generate_password_hash(password)
 
+        # CREATE USER
         new_user = User(
             username=username,
             password=hashed_password,
             is_admin=is_admin
         )
 
-        db.session.add(new_user)
-        db.session.commit()
+        try:
 
-        flash("Registration successful")
+            db.session.add(new_user)
 
-        return redirect("/login")
+            db.session.commit()
+
+            flash("Registration successful")
+
+            return redirect("/login")
+
+        except Exception:
+
+            flash("Something went wrong")
+
+            return redirect("/register")
 
     return render_template("register.html")
 
@@ -69,9 +121,9 @@ def login():
 
     if request.method == "POST":
 
-        username = request.form.get("username")
+        username = request.form.get("username").strip().lower()
 
-        password = request.form.get("password")
+        password = request.form.get("password").strip()
 
         user = User.query.filter_by(
             username=username
@@ -91,6 +143,8 @@ def login():
         else:
 
             flash("Invalid username or password")
+
+            return redirect("/login")
 
     return render_template("login.html")
 
