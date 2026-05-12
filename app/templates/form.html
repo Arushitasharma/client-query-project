@@ -123,13 +123,17 @@
 
     <div class="container">
 
-        <div class="top-links">
+       <div class="top-links">
 
-            <a href="/admin">Admin</a>
+    {% if current_user.is_admin %}
 
-            <a href="/logout">Logout</a>
+        <a href="/admin">Dashboard</a>
 
-        </div>
+    {% endif %}
+
+    <a href="/logout">Logout</a>
+
+</div>
 
         <h1>Client Query Form</h1>
 
