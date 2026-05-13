@@ -83,8 +83,8 @@ def register():
 
             return redirect("/register")
 
-        # ADMIN CHECK
-        is_admin = username == "admin"
+        # DEFAULT USERS ARE NOT USERS
+        is_admin = False
 
         # HASH PASSWORD
         hashed_password = generate_password_hash(password)
