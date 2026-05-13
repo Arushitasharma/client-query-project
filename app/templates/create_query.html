@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create Query</title>
+
+        <link   
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/global.css') }}"
+        >
+
+        <link   
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/dashboard.css') }}"
+        >
+
+    </head>
+
+    <body>
+        <h1>Create Query</h1>
+        <a href="/dashboard">Back to Dashboard</a>
+        <hr>
+        <form action="/submit" method="POST">
+            
+            <input
+                type="text"
+                name="title"
+                placeholder="Enter query title"
+                required
+            >
+            <br><br>
+            <textarea
+                name="query"
+                placeholder="Enter query description"
+                required
+            ></textarea>
+            <br><br>
+            <button type="submit">
+                Submit Query
+            </button>
+        </form>
+    </body>
+</html>

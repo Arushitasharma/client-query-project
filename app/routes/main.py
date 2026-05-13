@@ -37,20 +37,22 @@ def dashboard():
 
     return render_template("dashboard.html", queries=user_queries)
 
+@main.route("/create-query")
+@login_required
+def create_query():
+    return render_template("create_query.html")
+
 # SUBMIT QUERY
 @main.route("/submit", methods=["POST"])
 @login_required
 def submit_query():
 
-    name = request.form.get("name")
-
-    email = request.form.get("email")
+    title = request.form.get("title")
 
     query_text = request.form.get("query")
 
     new_query = Query(
-        name=name,
-        email=email,
+        title=title,
         message=query_text,
         user_id=current_user.id
     )
