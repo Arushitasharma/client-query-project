@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard</title>
+
+    <link 
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/global.css') }}"
+    >
+
+    <link 
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <h1>User Dashboard</h1>
+
+    <hr>
+
+    <p>
+        Welcome,
+        {{ current_user.username }}
+    </p>
+
+    <br>
+
+    <a href="/logout">
+        Logout
+    </a>
+
+    {% if current_user.is_admin %}
+
+        |
+        <a href="/admin">
+            Admin Dashboard
+        </a>
+
+    {% endif %}
+
+    <hr>
+
+    <h2>My Queries</h2>
+
+    {% if queries %}
+
+        {% for query in queries %}
+
+            <div class="query-card">
+
+                <h3>
+                    {{ query.name }}
+                </h3>
+
+                <p>
+                    {{ query.message }}
+                </p>
+
+                <strong>
+                    Status:
+                </strong>
+
+                {{ query.status }}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            No queries submitted yet.
+        </p>
+
+    {% endif %}
+
+</body>
+</html>
