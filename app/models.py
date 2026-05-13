@@ -50,3 +50,9 @@ class Query(db.Model):
         db.String(50),
         default="Pending"
     )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )

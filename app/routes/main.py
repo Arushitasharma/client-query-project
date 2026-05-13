@@ -41,7 +41,8 @@ def submit_query():
     new_query = Query(
         name=name,
         email=email,
-        message=query_text
+        message=query_text,
+        user_id=current_user.id
     )
 
     db.session.add(new_query)
