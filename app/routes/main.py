@@ -16,16 +16,26 @@ from app.models import db, Query
 main = Blueprint('main', __name__)
 
 
-# HOME PAGE
 @main.route("/")
-def home():
+def index():
 
-    # IF NOT LOGGED IN
     if not current_user.is_authenticated:
         return redirect("/login")
 
-    return render_template("form.html")
+    return redirect("/dashboard")
 
+@main.route("/dashboard")
+@login_required
+def dashboard():
+
+    user_queries = 
+        Query.query.filter_by(
+            user_id=current_user.id
+        ).order_by(
+            Query.id.desc
+        ).all()
+
+    return render_template("dashboard.html", queries=user_queries)
 
 # SUBMIT QUERY
 @main.route("/submit", methods=["POST"])
