@@ -2,8 +2,7 @@ from flask import (
     Blueprint,
     render_template,
     redirect,
-    url_for,
-    abort
+    flash
 )
 
 from flask_login import (
@@ -13,53 +12,50 @@ from flask_login import (
 
 from app.models import db, Query
 
-admin = Blueprint('admin', __name__)
+
+admin = Blueprint("admin", __name__)
 
 
 # ADMIN DASHBOARD
 @admin.route("/admin")
 @login_required
-def admin_panel():
+def admin_dashboard():
 
-    # ADMIN CHECK
+    # BLOCK NON-ADMINS
     if not current_user.is_admin:
-        abort(403)
 
+        flash("Access denied")
+
+        return redirect("/dashboard")
+
+    # FETCH ALL QUERIES
     rows = Query.query.order_by(
         Query.id.desc()
     ).all()
 
+    # STATS
     total_queries = Query.query.count()
 
     pending_queries = Query.query.filter_by(
         status="Pending"
     ).count()
 
+    resolved_queries = Query.query.filter_by(
+        status="Resolved"
+    ).count()
+
     return render_template(
-        "admin.html",
+
+        "admin/admin.html",
+
         rows=rows,
+
         total_queries=total_queries,
-        pending_queries=pending_queries
+
+        pending_queries=pending_queries,
+
+        resolved_queries=resolved_queries
     )
-
-
-# DELETE QUERY
-@admin.route("/delete/<int:id>")
-@login_required
-def delete_query(id):
-
-    if not current_user.is_admin:
-        abort(403)
-
-    query = Query.query.get(id)
-
-    if query:
-
-        db.session.delete(query)
-
-        db.session.commit()
-
-    return redirect(url_for("admin.admin_panel"))
 
 
 # TOGGLE STATUS
@@ -67,19 +63,48 @@ def delete_query(id):
 @login_required
 def toggle_status(id):
 
+    # BLOCK NON-ADMINS
     if not current_user.is_admin:
-        abort(403)
 
-    query = Query.query.get(id)
+        flash("Access denied")
 
-    if query:
+        return redirect("/dashboard")
 
-        if query.status == "Pending":
-            query.status = "Resolved"
+    query = Query.query.get_or_404(id)
 
-        else:
-            query.status = "Pending"
+    if query.status == "Pending":
 
-        db.session.commit()
+        query.status = "Resolved"
 
-    return redirect(url_for("admin.admin_panel"))
+    else:
+
+        query.status = "Pending"
+
+    db.session.commit()
+
+    flash("Query status updated")
+
+    return redirect("/admin")
+
+
+# DELETE QUERY
+@admin.route("/delete/<int:id>")
+@login_required
+def delete_query(id):
+
+    # BLOCK NON-ADMINS
+    if not current_user.is_admin:
+
+        flash("Access denied")
+
+        return redirect("/dashboard")
+
+    query = Query.query.get_or_404(id)
+
+    db.session.delete(query)
+
+    db.session.commit()
+
+    flash("Query deleted successfully")
+
+    return redirect("/admin")

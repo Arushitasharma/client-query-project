@@ -112,7 +112,7 @@ def register():
 
             return redirect("/register")
 
-    return render_template("register.html")
+    return render_template("auth/register.html")
 
 
 # LOGIN
@@ -146,7 +146,7 @@ def login():
 
             return redirect("/login")
 
-    return render_template("login.html")
+    return render_template("auth/login.html")
 
 
 # LOGOUT

@@ -34,12 +34,12 @@ def dashboard():
             Query.id.desc()
         ).all()
 
-    return render_template("dashboard.html", queries=user_queries)
+    return render_template("dashboard/dashboard.html", queries=user_queries)
 
 @main.route("/create-query")
 @login_required
 def create_query():
-    return render_template("create_query.html")
+    return render_template("dashboard/create_query.html")
 
 # SUBMIT QUERY
 @main.route("/submit", methods=["POST"])

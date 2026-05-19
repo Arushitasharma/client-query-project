@@ -1,0 +1,42 @@
+.auth-container{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+.auth-card{
+
+    width:100%;
+
+    max-width:450px;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:12px;
+
+    box-shadow:0 2px 12px rgba(0,0,0,0.1);
+}
+
+.auth-card h1{
+
+    margin-bottom:10px;
+}
+
+.auth-card p{
+
+    margin-bottom:25px;
+
+    color:#666;
+}
+
+.auth-link{
+
+    margin-top:20px;
+}
