@@ -1,0 +1,145 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:Arial, sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+}
+
+a{
+    text-decoration:none;
+}
+
+/* NAVBAR */
+
+.navbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 40px;
+
+    background:#4c63ff;
+
+    color:white;
+}
+
+.navbar a{
+
+    color:white;
+
+    margin-left:20px;
+
+    font-weight:bold;
+}
+
+/* MAIN CONTAINER */
+
+.main-container{
+
+    max-width:1100px;
+
+    margin:40px auto;
+
+    padding:20px;
+}
+
+/* FLASH MESSAGES */
+
+.flash-message{
+
+    background:#d4edda;
+
+    color:#155724;
+
+    padding:15px;
+
+    border-radius:8px;
+
+    margin-bottom:20px;
+}
+
+/* QUERY CARDS */
+
+.query-card{
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* FORM */
+
+form{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:12px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+input,
+textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    margin-bottom:20px;
+
+    font-size:16px;
+}
+
+textarea{
+
+    min-height:150px;
+
+    resize:vertical;
+}
+
+/* BUTTONS */
+
+button{
+
+    background:#4c63ff;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:16px;
+}
+
+button:hover{
+
+    background:#374de0;
+}

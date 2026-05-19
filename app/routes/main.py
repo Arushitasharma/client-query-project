@@ -28,11 +28,10 @@ def index():
 @login_required
 def dashboard():
 
-    user_queries = 
-        Query.query.filter_by(
+    user_queries = Query.query.filter_by(
             user_id=current_user.id
         ).order_by(
-            Query.id.desc
+            Query.id.desc()
         ).all()
 
     return render_template("dashboard.html", queries=user_queries)
@@ -63,4 +62,4 @@ def submit_query():
 
     flash("Query submitted successfully!")
 
-    return redirect("/")
+    return redirect("/dashboard")
