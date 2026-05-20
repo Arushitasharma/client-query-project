@@ -215,6 +215,12 @@ Admin Dashboard
                             <a
                                 href="/toggle-status/{{ row.id }}"
                                 class="status-btn pending"
+
+                                onclick="
+                                    return confirm(
+                                        'Change query status?'
+                                    )
+                                "
                             >
                                 Pending
                             </a>
@@ -223,7 +229,13 @@ Admin Dashboard
 
                             <a
                                 href="/toggle-status/{{ row.id }}"
-                                class="status-btn resolved"
+                                class="status-btn pending"
+
+                                onclick="
+                                    return confirm(
+                                        'Change query status?'
+                                    )
+                                "
                             >
                                 Resolved
                             </a>
@@ -237,6 +249,12 @@ Admin Dashboard
                         <a
                             href="/delete/{{ row.id }}"
                             class="delete-btn"
+
+                            onclick="
+                                return confirm(
+                                    'Are you sure you want to delete this query?'
+                                )
+                            "
                         >
                             Delete
                         </a>

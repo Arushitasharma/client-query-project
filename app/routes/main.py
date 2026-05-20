@@ -3,12 +3,18 @@ from flask import (
     render_template,
     request,
     redirect,
-    flash
+    flash,
+    abort
 )
 
 from flask_login import (
     login_required,
     current_user
+)
+
+from app.utils.validators import (
+    validate_query_title,
+    validate_query_message
 )
 
 from app.models import db, Query
@@ -49,9 +55,7 @@ def query_details(id):
         not current_user.is_admin
     ):
 
-        flash("Access denied")
-
-        return redirect("/dashboard")
+        abort(403)
 
     return render_template(
 
@@ -70,9 +74,28 @@ def create_query():
 @login_required
 def submit_query():
 
-    title = request.form.get("title")
+    title = request.form.get("title", "").strip()
 
-    query_text = request.form.get("query")
+    query_text = request.form.get("query", "").strip()
+
+    # TITLE VALIDATION
+    valid, message = validate_query_title(title)
+
+    if not valid:
+
+        flash(message)
+
+        return redirect("/create-query")
+
+
+    # MESSAGE VALIDATION
+    valid, message = validate_query_message(query_text)
+
+    if not valid:
+
+        flash(message)
+
+        return redirect("/create-query")
 
     new_query = Query(
         title=title,

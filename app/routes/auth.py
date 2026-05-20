@@ -17,9 +17,12 @@ from werkzeug.security import (
     check_password_hash
 )
 
-from app.models import db, User
+from app.utils.validators import (
+    validate_username,
+    validate_password
+)
 
-import re
+from app.models import db, User
 
 auth = Blueprint('auth', __name__)
 
@@ -30,45 +33,26 @@ def register():
 
     if request.method == "POST":
 
-        username = request.form.get("username").strip().lower()
+        username = request.form.get("username", "").strip().lower()
 
         password = request.form.get("password").strip()
 
-        # USERNAME SPACES CHECK
-        if " " in username:
+        # USERNAME VALIDATION
+        valid, message = validate_username(username)
 
-            flash("Username cannot contain spaces")
+        if not valid:
 
-            return redirect("/register")
-
-        # USERNAME LENGTH CHECK
-        if len(username) < 4 or len(username) > 15:
-
-            flash("Username must be between 4 and 15 characters")
+            flash(message)
 
             return redirect("/register")
 
-        # PASSWORD LENGTH CHECK
-        if len(password) < 4 or len(password) > 15:
 
-            flash("Password must be between 4 and 15 characters")
+        # PASSWORD VALIDATION
+        valid, message = validate_password(password)
 
-            return redirect("/register")
+        if not valid:
 
-        # PASSWORD REGEX CHECK
-        password_pattern = (
-            r"^(?=.*[a-z])"
-            r"(?=.*[A-Z])"
-            r"(?=.*\d)"
-            r"(?=.*[@$!%*?&])"
-            r".{4,15}$"
-        )
-
-        if not re.match(password_pattern, password):
-
-            flash(
-                "Password must contain uppercase, lowercase, digit and special character"
-            )
+            flash(message)
 
             return redirect("/register")
 
@@ -83,7 +67,7 @@ def register():
 
             return redirect("/register")
 
-        # DEFAULT USERS ARE NOT USERS
+        # DEFAULT USERS ARE NOT ADMINS
         is_admin = False
 
         # HASH PASSWORD

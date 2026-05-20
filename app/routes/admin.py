@@ -2,7 +2,8 @@ from flask import (
     Blueprint,
     render_template,
     redirect,
-    flash
+    flash,
+    abort
 )
 
 from flask_login import (
@@ -24,9 +25,7 @@ def admin_dashboard():
     # BLOCK NON-ADMINS
     if not current_user.is_admin:
 
-        flash("Access denied")
-
-        return redirect("/dashboard")
+        abort(403)
 
     # FETCH ALL QUERIES
     rows = Query.query.order_by(
@@ -66,9 +65,7 @@ def toggle_status(id):
     # BLOCK NON-ADMINS
     if not current_user.is_admin:
 
-        flash("Access denied")
-
-        return redirect("/dashboard")
+        abort(403)
 
     query = Query.query.get_or_404(id)
 
@@ -95,9 +92,7 @@ def delete_query(id):
     # BLOCK NON-ADMINS
     if not current_user.is_admin:
 
-        flash("Access denied")
-
-        return redirect("/dashboard")
+        abort(403)
 
     query = Query.query.get_or_404(id)
 

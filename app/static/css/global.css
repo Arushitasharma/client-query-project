@@ -143,3 +143,54 @@ button:hover{
 
     background:#374de0;
 }
+
+/* ERROR PAGES */
+
+.error-page{
+
+    min-height:80vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+}
+
+.error-page h1{
+
+    font-size:100px;
+
+    color:#4c63ff;
+
+    margin-bottom:10px;
+}
+
+.error-page h2{
+
+    margin-bottom:15px;
+}
+
+.error-page p{
+
+    margin-bottom:25px;
+
+    color:#666;
+}
+
+.error-page a{
+
+    background:#4c63ff;
+
+    color:white;
+
+    padding:14px 24px;
+
+    border-radius:10px;
+
+    text-decoration:none;
+}
