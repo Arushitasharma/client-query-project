@@ -1,90 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layouts/base.html" %}
 
-<head>
+{% block title %}
+Dashboard
+{% endblock %}
 
-    <meta charset="UTF-8">
+{% block layout %}
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
 
-    <title>Dashboard</title>
+<div class="dashboard-layout">
 
-    <link 
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/global.css') }}"
-    >
+    <!-- SIDEBAR -->
 
-    <link 
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/dashboard.css') }}"
-    >
+    <aside class="sidebar">
 
-</head>
+        <h2 class="logo">
+            ClientQuery
+        </h2>
 
-<body>
+        <nav class="sidebar-nav">
 
-    <h1>User Dashboard</h1>
+            <a
+                href="/dashboard"
+                class="active"
+            >
+                Dashboard
+            </a>
 
-    <a href="/create-query">Create New Query</a>
+            <a href="/create-query">
+                Create Query
+            </a>
 
-    <hr>
+            {% if current_user.is_admin %}
 
-    <p>
-        Welcome,
-        {{ current_user.username }}
-    </p>
+                <a href="/admin">
+                    Admin Panel
+                </a>
 
-    <br>
+            {% endif %}
 
-    <a href="/logout">
-        Logout
-    </a>
+            <a href="/logout">
+                Logout
+            </a>
 
-    {% if current_user.is_admin %}
+        </nav>
 
-        |
-        <a href="/admin">
-            Admin Dashboard
-        </a>
+    </aside>
 
-    {% endif %}
 
-    <hr>
+    <!-- MAIN CONTENT -->
 
-    <h2>My Queries</h2>
+    <section class="dashboard-content">
 
-    {% if queries %}
+        {% with messages = get_flashed_messages() %}
 
-        {% for query in queries %}
+            {% if messages %}
 
-            <div class="query-card">
+                {% for message in messages %}
 
-                <h3>
-                    {{ query.title }}
-                </h3>
+                    <div class="flash-message">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}   
+
+        <div class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    My Queries
+                </h1>
 
                 <p>
-                    {{ query.message }}
+                    Welcome back,
+                    {{ current_user.username }}
                 </p>
-
-                <strong>
-                    Status:
-                </strong>
-
-                {{ query.status }}
 
             </div>
 
-        {% endfor %}
+            <a
+                href="/create-query"
+                class="new-query-btn"
+            >
+                + New Query
+            </a>
 
-    {% else %}
+        </div>
 
-        <p>
-            No queries submitted yet.
-        </p>
 
-    {% endif %}
+        {% if queries %}
 
-</body>
-</html>
+            <div class="query-list">
+
+                {% for query in queries %}
+
+                    <div class="query-card">
+
+                        <div class="query-top">
+
+                            <h3>
+                                {{ query.title }}
+                            </h3>
+
+                            <span class="
+                                status-badge
+                                {% if query.status == 'Resolved' %}
+                                    resolved
+                                {% else %}
+                                    pending
+                                {% endif %}
+                            ">
+
+                                {{ query.status }}
+
+                            </span>
+
+                        </div>
+
+                        <p>
+                            {{ query.message }}
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h3>
+                    No Queries Yet
+                </h3>
+
+                <p>
+                    Start by creating your first query.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

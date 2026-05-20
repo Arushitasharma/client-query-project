@@ -1,44 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Create Query</title>
+{% extends "layouts/base.html" %}
 
-        <link   
-            rel="stylesheet"
-            href="{{ url_for('static', filename='css/global.css') }}"
-        >
+{% block title %}
+Create Query
+{% endblock %}
 
-        <link   
-            rel="stylesheet"
-            href="{{ url_for('static', filename='css/dashboard.css') }}"
-        >
+{% block extra_css %}
 
-    </head>
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
 
-    <body>
-        <h1>Create Query</h1>
-        <a href="/dashboard">Back to Dashboard</a>
-        <hr>
-        <form action="/submit" method="POST">
-            
-            <input
-                type="text"
-                name="title"
-                placeholder="Enter query title"
-                required
+{% endblock %}
+
+
+{% block layout %}
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2 class="logo">
+            ClientQuery
+        </h2>
+
+        <nav class="sidebar-nav">
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a
+                href="/create-query"
+                class="active"
             >
-            <br><br>
-            <textarea
-                name="query"
-                placeholder="Enter query description"
-                required
-            ></textarea>
-            <br><br>
-            <button type="submit">
-                Submit Query
-            </button>
-        </form>
-    </body>
-</html>
+                Create Query
+            </a>
+
+            {% if current_user.is_admin %}
+
+                <a href="/admin">
+                    Admin Panel
+                </a>
+
+            {% endif %}
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <section class="dashboard-content">
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="flash-message">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <div class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Create Query
+                </h1>
+
+                <p>
+                    Submit a new client issue or request
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="query-form-card">
+
+            <form action="/submit" method="POST">
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Enter query title"
+                    required
+                >
+
+                <textarea
+                    name="query"
+                    placeholder="Describe your issue..."
+                    required
+                ></textarea>
+
+                <button type="submit">
+
+                    Submit Query
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

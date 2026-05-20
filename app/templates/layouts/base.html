@@ -9,7 +9,10 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>
-        {% block title %}{% endblock %}
+
+        {% block title %}
+        {% endblock %}
+
     </title>
 
     <link
@@ -17,72 +20,44 @@
         href="{{ url_for('static', filename='css/global.css') }}"
     >
 
+    {% block extra_css %}
+    {% endblock %}
+
 </head>
 
 <body>
 
-    {% if current_user.is_authenticated %}
+    {% block layout %}
 
-    <nav class="navbar">
+        <main class="main-container">
 
-        <div class="nav-left">
+            {% with messages = get_flashed_messages() %}
 
-            <a href="/dashboard">
-                Dashboard
-            </a>
+                {% if messages %}
 
-        </div>
+                    {% for message in messages %}
 
-        <div class="nav-right">
+                        <div class="flash-message">
 
-            <a href="/create-query">
-                Create Query
-            </a>
+                            {{ message }}
 
-            {% if current_user.is_admin %}
+                        </div>
 
-                <a href="/admin">
-                    Admin
-                </a>
+                    {% endfor %}
 
-            {% endif %}
+                {% endif %}
 
-            <a href="/logout">
-                Logout
-            </a>
+            {% endwith %}
 
-        </div>
+            {% block content %}
+            {% endblock %}
 
-    </nav>
+        </main>
 
-    {% endif %}
+    {% endblock %}
 
-
-    <main class="main-container">
-
-        {% with messages = get_flashed_messages() %}
-
-            {% if messages %}
-
-                {% for message in messages %}
-
-                    <div class="flash-message">
-
-                        {{ message }}
-
-                    </div>
-
-                {% endfor %}
-
-            {% endif %}
-
-        {% endwith %}
-
-
-        {% block content %}
-        {% endblock %}
-
-    </main>
+    {% block extra_js %}
+    {% endblock %}
 
 </body>
 </html>

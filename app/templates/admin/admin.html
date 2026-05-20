@@ -4,133 +4,222 @@
 Admin Dashboard
 {% endblock %}
 
-{% block content %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
 
 <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/admin.css') }}"
 >
 
-<div class="admin-header">
+{% endblock %}
 
-    <h1>Admin Dashboard</h1>
+
+{% block layout %}
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2 class="logo">
+            ClientQuery
+        </h2>
+
+        <nav class="sidebar-nav">
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/create-query">
+                Create Query
+            </a>
+
+            <a 
+                href="/admin"
+                class="active"
+            >
+                Admin Panel
+            </a>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <section class="dashboard-content">
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="flash-message">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- HEADER -->
+
+        <div class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Admin Dashboard
+                </h1>
+
+                <p>
+                    Manage all submitted client queries
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="admin-stats">
+
+            <div class="stat-card">
+
+                <h3>Total Queries</h3>
+
+                <p>
+                    {{ total_queries }}
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Pending</h3>
+
+                <p>
+                    {{ pending_queries }}
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>Resolved</h3>
+
+                <p>
+                    {{ resolved_queries }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <table class="admin-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for row in rows %}
+
+                <tr>
+
+                    <td>
+                        {{ row.id }}
+                    </td>
+
+                    <td>
+                        {{ row.title }}
+                    </td>
+
+                    <td>
+                        {{ row.message }}
+                    </td>
+
+                    <td>
+
+                        {% if row.status == "Pending" %}
+
+                            <a
+                                href="/toggle-status/{{ row.id }}"
+                                class="status-btn pending"
+                            >
+                                Pending
+                            </a>
+
+                        {% else %}
+
+                            <a
+                                href="/toggle-status/{{ row.id }}"
+                                class="status-btn resolved"
+                            >
+                                Resolved
+                            </a>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="/delete/{{ row.id }}"
+                            class="delete-btn"
+                        >
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </section>
 
 </div>
-
-
-<div class="admin-stats">
-
-    <div class="stat-card">
-
-        <h3>Total Queries</h3>
-
-        <p>
-            {{ total_queries }}
-        </p>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <h3>Pending</h3>
-
-        <p>
-            {{ pending_queries }}
-        </p>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <h3>Resolved</h3>
-
-        <p>
-            {{ resolved_queries }}
-        </p>
-
-    </div>
-
-</div>
-
-
-<table class="admin-table">
-
-    <thead>
-
-        <tr>
-
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Actions</th>
-
-        </tr>
-
-    </thead>
-
-
-    <tbody>
-
-        {% for row in rows %}
-
-        <tr>
-
-            <td>
-                {{ row.id }}
-            </td>
-
-            <td>
-                {{ row.title }}
-            </td>
-
-            <td>
-                {{ row.message }}
-            </td>
-
-            <td>
-
-                {% if row.status == "Pending" %}
-
-                    <a
-                        href="/toggle-status/{{ row.id }}"
-                        class="status-btn pending"
-                    >
-                        Pending
-                    </a>
-
-                {% else %}
-
-                    <a
-                        href="/toggle-status/{{ row.id }}"
-                        class="status-btn resolved"
-                    >
-                        Resolved
-                    </a>
-
-                {% endif %}
-
-            </td>
-
-            <td>
-
-                <a
-                    href="/delete/{{ row.id }}"
-                    class="delete-btn"
-                >
-                    Delete
-                </a>
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </tbody>
-
-</table>
 
 {% endblock %}
