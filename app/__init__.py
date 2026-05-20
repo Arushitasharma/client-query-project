@@ -20,12 +20,23 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
     # APP CONFIG
+    database_url = os.getenv("DATABASE_URL")
+
+    if database_url and database_url.startswith("postgres://"):
+
+        database_url = database_url.replace(
+            "postgres://",
+            "postgresql://",
+            1
+        )
+
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY", "fallbacksecret"),
-        SQLALCHEMY_DATABASE_URI=os.getenv(
-            "DATABASE_URL",
+        SQLALCHEMY_DATABASE_URI=
+            database_url
+            or
             "sqlite:///site.db"
-        ),
+        ,
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
 
