@@ -1,0 +1,116 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Query Details
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/dashboard.css') }}"
+>
+
+{% endblock %}
+
+
+{% block layout %}
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2 class="logo">
+            ClientQuery
+        </h2>
+
+        <nav class="sidebar-nav">
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/create-query">
+                Create Query
+            </a>
+
+            {% if current_user.is_admin %}
+
+                <a href="/admin">
+                    Admin Panel
+                </a>
+
+            {% endif %}
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- CONTENT -->
+
+    <section class="dashboard-content">
+
+        <div class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    {{ query.title }}
+                </h1>
+
+                <p>
+                    Query Details
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="query-details-card">
+
+            <div class="query-status">
+
+                <strong>Status:</strong>
+
+                <span class="
+                    status-badge
+                    {% if query.status == 'Resolved' %}
+                        resolved
+                    {% else %}
+                        pending
+                    {% endif %}
+                ">
+
+                    {{ query.status }}
+
+                </span>
+
+            </div>
+
+
+            <div class="query-message">
+
+                <h3>Description</h3>
+
+                <p>
+                    {{ query.message }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

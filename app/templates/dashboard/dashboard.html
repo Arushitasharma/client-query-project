@@ -104,7 +104,12 @@ Dashboard
 
                 {% for query in queries %}
 
-                    <div class="query-card">
+                    <a
+                        href="/query/{{ query.id }}"
+                        class="query-card-link"
+                    >
+
+                        <div class="query-card">
 
                         <div class="query-top">
 
@@ -132,6 +137,8 @@ Dashboard
                         </p>
 
                     </div>
+
+                    </a>
 
                 {% endfor %}
 

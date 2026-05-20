@@ -36,6 +36,30 @@ def dashboard():
 
     return render_template("dashboard/dashboard.html", queries=user_queries)
 
+@main.route("/query/<int:id>")
+@login_required
+def query_details(id):
+
+    query = Query.query.get_or_404(id)
+
+    # SECURITY CHECK
+    if (
+        query.user_id != current_user.id
+        and
+        not current_user.is_admin
+    ):
+
+        flash("Access denied")
+
+        return redirect("/dashboard")
+
+    return render_template(
+
+        "dashboard/query_details.html",
+
+        query=query
+    )
+
 @main.route("/create-query")
 @login_required
 def create_query():
