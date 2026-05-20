@@ -103,3 +103,20 @@ def delete_query(id):
     flash("Query deleted successfully")
 
     return redirect("/admin")
+
+@admin.route("/make-admin/<username>")
+def make_admin(username):
+
+    user = User.query.filter_by(
+        username=username.lower()
+    ).first()
+
+    if not user:
+
+        return "User not found"
+
+    user.is_admin = True
+
+    db.session.commit()
+
+    return f"{username} is now admin"
