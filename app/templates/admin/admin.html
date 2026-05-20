@@ -138,6 +138,37 @@ Admin Dashboard
 
         </div>
 
+        <!-- SEARCH + FILTER -->
+
+        <div class="admin-toolbar">
+
+            <input
+                type="text"
+                id="querySearch"
+                placeholder="Search queries..."
+                onkeyup="filterQueries()"
+            >
+
+            <select
+                id="statusFilter"
+                onchange="filterQueries()"
+            >
+
+                <option value="all">
+                    All Status
+                </option>
+
+                <option value="Pending">
+                    Pending
+                </option>
+
+                <option value="Resolved">
+                    Resolved
+                </option>
+
+            </select>
+
+        </div>
 
         <!-- TABLE -->
 
@@ -161,7 +192,9 @@ Admin Dashboard
 
                 {% for row in rows %}
 
-                <tr>
+                <tr
+                    data-status="{{ row.status }}"    
+                >
 
                     <td>
                         {{ row.id }}
@@ -221,5 +254,57 @@ Admin Dashboard
     </section>
 
 </div>
+
+{% block extra_js %}
+
+<script>
+
+function filterQueries(){
+
+    let searchInput =
+        document.getElementById("querySearch")
+        .value
+        .toLowerCase();
+
+    let statusFilter =
+        document.getElementById("statusFilter")
+        .value;
+
+    let rows =
+        document.querySelectorAll(".admin-table tbody tr");
+
+    rows.forEach(row => {
+
+        let text =
+            row.textContent.toLowerCase();
+
+        let status =
+            row.dataset.status;
+
+        let matchesSearch =
+            text.includes(searchInput);
+
+        let matchesStatus =
+            statusFilter === "all"
+            ||
+            status === statusFilter;
+
+        if(matchesSearch && matchesStatus){
+
+            row.style.display = "";
+
+        }
+
+        else{
+
+            row.style.display = "none";
+        }
+
+    });
+}
+
+</script>
+
+{% endblock %}
 
 {% endblock %}
