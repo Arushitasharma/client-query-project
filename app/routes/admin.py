@@ -11,7 +11,7 @@ from flask_login import (
     current_user
 )
 
-from app.models import db, Query
+from app.models import db, Query, User
 
 
 admin = Blueprint("admin", __name__)
