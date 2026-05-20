@@ -140,3 +140,30 @@
 
     font-size:15px;
 }
+
+/* RESOLVED QUERY ROW */
+
+.resolved-row{
+
+    background:#f0fff4;
+}
+
+
+/* RESOLVED STATUS BUTTON */
+
+.status-btn.resolved{
+
+    background:#28a745;
+
+    color:white;
+}
+
+
+/* PENDING STATUS BUTTON */
+
+.status-btn.pending{
+
+    background:#f0ad4e;
+
+    color:white;
+}

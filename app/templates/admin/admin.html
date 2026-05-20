@@ -193,7 +193,13 @@ Admin Dashboard
                 {% for row in rows %}
 
                 <tr
-                    data-status="{{ row.status }}"    
+                    data-status="{{ row.status }}"
+
+                    class="
+                        {% if row.status == 'Resolved' %}
+                            resolved-row
+                        {% endif %}
+                    "  
                 >
 
                     <td>
